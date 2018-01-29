@@ -1,9 +1,12 @@
 package squares;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Arrays;
 
 public class Squares_main {
@@ -20,17 +23,23 @@ public class Squares_main {
 		
 		Squares_lib slib = new Squares_lib(x, y);
 		double value[] = new double[100];
+		double value2[][] = new double[100][4];
 		for(int i = 0; i < 100; i++) {
 			theta = slib.getDx();
 			System.out.println(i+" :theta[0] = "+theta[0]);
 			System.out.println(i+" :theta[1] = "+theta[1]);
 			System.out.println(i+" :Object function = "+slib.getObject());
 			value[i] = slib.getObject();
+			value2[i][0] = i;
+			value2[i][1] = slib.getObject();
+			value2[i][2] = theta[0];
+			value2[i][3] = theta[1];
 		}
 		Graph graph = new Graph(value);
 		graph.setBounds(5,5,700,550);
 		graph.setVisible(true);
-
+		
+		smain.writeCSV("csv/result.csv", value2);
 		
 	}//main関数終了
 	
@@ -60,6 +69,32 @@ public class Squares_main {
         //CSVから取り込みここまで
     }
 	
+	public void writeCSV(String path, double[][] data) {
+		try {
+			FileWriter fw = new FileWriter(path, true); //true:追記、false:上書き
+			PrintWriter pw = new PrintWriter(new BufferedWriter(fw));
+			//内容を指定する
+			for(int i = 0; i < data.length; i++) {
+			    for(int j = 0; j < data[0].length; j++) {
+			    	pw.print(data[i][j]);
+			    	pw.print(",");
+			    }
+				//pw.print(data[i]);
+			    //pw.print(",");
+			    pw.println(",");//1行ごとに改行
+			}
+			pw.println();
+			//ファイルに書き出す
+			pw.close();
+
+			//終了メッセージを画面に出力する
+			System.out.println("出力完了 : "+path);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
 		
 
 }
